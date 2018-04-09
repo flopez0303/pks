@@ -1,0 +1,4 @@
+export NSX_MANAGER_USERNAME='admin'
+export NSX_MANAGER_PASSWORD='VMware1!'
+export NSX_MANAGER_IP='192.168.100.110'
+
