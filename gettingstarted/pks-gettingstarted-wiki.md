@@ -46,3 +46,9 @@ dive
 https://github.com/wagoodman/dive
 
 ## Creating and Managing Kubernetes Clusters
+
+![alt text](http://github.com/csaroka/pks/gettingstarted/images/create-cluster-flow.png "Create K8s Cluster Flow")
+
+
+
+
