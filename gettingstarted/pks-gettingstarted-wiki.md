@@ -1,5 +1,4 @@
-# VMware PKS PoC
-### Getting Started with the Platform
+# VMware PKS PoC - Getting Started with the Platform
 Version: 0.2  
 Author: Charles Saroka
 
