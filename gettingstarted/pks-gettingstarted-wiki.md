@@ -88,6 +88,40 @@ Verify a connection to the Kubernetes cluster and the ability to view content fr
 `$ kubectl get all -–all-namespaces`
 
 #### Step 4: Grant Developer/User Access with a Kubernetes RBAC Policy
+Before users can access the Kubernetes cluster API, an operator must apply a RBAC policy to grant them access.  
+Reference: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+
+To help get started, here is an example:
+
+```
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+  name: developer2-ldaptest-admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: admin
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: User
+  name: developer2
+  ```
+In this RBAC policy, are going to create a RBAC policy called developer2-ldaptest-admin.  It will use a Kubernetes default clusterrole, called admin, to give developer2 administrative privileges in a particular namespace.
+
+Create the namespace  
+`$ kubectl create ns <namespace name>`  
+Save the RBAC to a .yml file and apply it to the namespace  
+`$ kubectl apply –f <filename> –n <namespace name>`  
+
+Additionally, you can view the other clusterroles with the command  
+`$ kubectl get clusterroles`
+
+#### Step 5: Retrieve User Token
+
+
+
 
 
 
