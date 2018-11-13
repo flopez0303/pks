@@ -47,6 +47,7 @@ https://github.com/wagoodman/dive
 
 ## Creating and Managing Kubernetes Clusters
 
+### Create a Kubernetes Cluster Workflow
 ![alt text](https://github.com/csaroka/pks/blob/master/gettingstarted/images/create-cluster-flow.png "Create K8s Cluster Flow")
 
 
