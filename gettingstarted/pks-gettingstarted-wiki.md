@@ -171,8 +171,8 @@ a.  Run the command `$ kubectl config view`
 b. Identify the appropriate context, user, and refresh token  
 c. Copy the refresh token and paste into the UI prompt
 
-## Scaling Out Kubernetes Clusters
-### Increase the number of worker nodes
+### Scaling Out Kubernetes Clusters
+#### Increase the number of worker nodes
 
 Use the PKS CLI to log in  
 `$ pks –a <pks api fqdn> –u <ldap username> –k`  
@@ -184,13 +184,29 @@ Resize the cluster
 `$ pks resize <cluster name> -n <new total # of nodes>`  
 Note: For instance, to increase the number of worker nodes from 3 to 5, enter 5, not 2, for the number of nodes.
 
-## Destryoing a Kubernetes Cluster
+### Destryoing a Kubernetes Cluster
 Use the PKS CLI to log in  
 `$ pks –a <pks api fqdn> –u <ldap username> –k`  
 List the existing Kubernetes clusters  
 `$ pks clusters`  
 Destroy the Kubernetes cluster  
 `$ pks delete-cluster <cluster name>`
+
+## Working with the Harbor Registry
+For secure registry access, users will require the registry root certificate.  To obtain the root certificate, a registry admin needs to log into the Harbor management portal and navigate to Administration > Configuration > System Settings. Next, select the hyeperlink to Download the Registry Root Certificate. Then, the admin user can save and share the root certificate with the registry users.
+
+#### Docker Client Login - Linux User
+`$ sudo mkdir -p /etc/docker/certs.d/<Harbor FQDN>`  
+`$ sudo cp ca.crt /etc/docker/certs.d/<Harbor FQDN>`  
+`$ mkdir -p ~/.docker/tls/<Harbor FQDN>\:4443/`  
+`$ cp ca.crt ~/.docker/tls/<Harbor FQDN>\:4443/`  
+`$ sudo cp ca.crt /usr/local/share/ca-certificates/`  
+`$ sudo update-ca-certificates`  
+`$ service docker restart`  
+`$ docker login <Harbor FQDN>`
+
+#### Docker Client Login - Windows User
+
 
 
 
