@@ -184,6 +184,13 @@ Resize the cluster
 `$ pks resize <cluster name> -n <new total # of nodes>`  
 Note: For instance, to increase the number of worker nodes from 3 to 5, enter 5, not 2, for the number of nodes.
 
+## Destryoing a Kubernetes Cluster
+Use the PKS CLI to log in  
+`$ pks –a <pks api fqdn> –u <ldap username> –k`  
+List the existing Kubernetes clusters  
+`$ pks clusters`  
+Destroy the Kubernetes cluster  
+`$ pks delete-cluster <cluster name>`
 
 
 
