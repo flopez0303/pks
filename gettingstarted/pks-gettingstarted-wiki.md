@@ -125,7 +125,7 @@ Linux - https://github.com/csaroka/pks/blob/master/tokenrefresh/user-token-refre
 Windows - https://github.com/csaroka/pks/blob/master/tokenrefresh/user-token-refresh-win.ps1
 
 ##### Retrieve Developer Token – Linux User
-a. Open a text-editor and paste from here.  
+a. Open a text-editor and paste from https://raw.githubusercontent.com/csaroka/pks/master/tokenrefresh/user-token-refresh-lnx.sh   
 b. Save as `<filename>.sh`  
 c. Make the file executable with  
 `$ chmod a+x <filename>.sh`  
@@ -143,7 +143,7 @@ c. Add to System variables, path
 `C:\Program Files\OpenSSL-Win64\bin`  
 d. Download and install kubectl from Pivotal Network
 https://network.pivotal.io/products/pivotal-container-service#/releases/191865/file_groups/1134  
-e. Add the location of `kubectl` to path or from within the same directory, open a text-editor and paste from here.  
+e. Add the location of `kubectl` to path or from within the same directory, open a text-editor and paste from https://raw.githubusercontent.com/csaroka/pks/master/tokenrefresh/user-token-refresh-win.ps1  
 f. Save as `<filename>.ps1`  
 g. Open PowerShell 6 and navigate to the directory containing the .ps1 script  
 h. Execute the script with `.\<filename>.ps1`  
