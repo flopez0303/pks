@@ -119,6 +119,75 @@ Additionally, you can view the other clusterroles with the command
 `$ kubectl get clusterroles`
 
 #### Step 5: Retrieve User Token
+Different from Operators, Developers will retrieve their tokens and populate their kubeconfig by running a script from their workstation.
+Today, the scripts are written for Linux and Windows.  
+Linux - https://github.com/csaroka/pks/blob/master/tokenrefresh/user-token-refresh-lnx.sh  
+Windows - https://github.com/csaroka/pks/blob/master/tokenrefresh/user-token-refresh-win.ps1
+
+##### Retrieve Developer Token – Linux User
+a. Open a text-editor and paste from here.  
+b. Save as `<filename>.sh`  
+c. Make the file executable with  
+`$ chmod a+x <filename>.sh`  
+d. Run the file `$ ./<filename>.sh`  
+e. Answer Prompts:  
+`API: <FQDN>`  
+`CLUSTER: <FQDN>`  
+`USER: <LDAP User Name>`  
+`Password: <LDAP User Password>`  
+f. Run `$ kubectl get pods` to verify cluster access
+##### Retrieve Developer Token – Winidows User
+a. Install Powershell Core 6.1 or later  https://github.com/PowerShell/PowerShell/releases  
+b. Install OpenSSL Win64 v1.1.1 or later for Windows https://slproweb.com/products/Win32OpenSSL.html  
+c. Add to System variables, path
+`C:\Program Files\OpenSSL-Win64\bin`  
+d. Download and install kubectl from Pivotal Network
+https://network.pivotal.io/products/pivotal-container-service#/releases/191865/file_groups/1134  
+e. Add the location of `kubectl` to path or from within the same directory, open a text-editor and paste from here.  
+f. Save as `<filename>.ps1`  
+g. Open PowerShell 6 and navigate to the directory containing the .ps1 script  
+h. Execute the script with `.\<filename>.ps1`  
+i. Answer Prompts:  
+`API: <FQDN>`  
+`CLUSTER: <FQDN>`  
+`USER: <LDAP User Name>`  
+`Password: <LDAP User Password>`  
+j. Run `$ kubectl get pods` to verify cluster access
+
+#### Accessing the Kubernetes Dashboard
+
+Open a terminal window and run the command
+`$ kubectl proxy`
+
+Open and browser windows and navigate to:  
+http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
+
+Either import the user kube .config file or paste the user token  
+##### Import kube.config file  
+a. For Linux and MacOS, the kube .config file is often found in ~/.kube/.config  
+b. For Windows, the kube config file is often found in  `C:\Users\<username>\.kube\config`  
+##### Copy and paste the user refresh token  
+a.  Run the command `$ kubectl config view`  
+b. Identify the appropriate context, user, and refresh token  
+c. Copy the refresh token and paste into the UI prompt
+
+## Scaling Out Kubernetes Clusters
+### Increase the number of worker nodes
+
+Use the PKS CLI to log in  
+`$ pks –a <pks api fqdn> –u <ldap username> –k`  
+List the existing Kubernetes clusters  
+`$ pks clusters`  
+Get the current number of Kubernetes cluster worker nodes  
+`$ pks cluster <cluster name>`  
+Resize the cluster  
+`$ pks resize <cluster name> -n <new total # of nodes>`  
+Note: For instance, to increase the number of worker nodes from 3 to 5, enter 5, not 2, for the number of nodes.
+
+
+
+
+
 
 
 
