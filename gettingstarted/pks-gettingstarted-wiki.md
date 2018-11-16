@@ -205,15 +205,160 @@ For secure registry access, users will require the registry root certificate.  T
 `$ service docker restart`  
 `$ docker login <Harbor FQDN>`
 
-#### Docker Client Login - Windows User
+#### Docker Client Login - Windows User  
+Download the Harbor root certificate to the client workstation.  
+From the Windows UI, open the certificate file and import to local machine.  
+Restart the docker client service  
+Open the CMD window, and run  
+`$ docker login <Harbor FQDN>`  
+For additional support, see the Harbor User Guide, https://github.com/goharbor/harbor/blob/master/docs/user_guide.md#pull-image-from-harbor-in-kubernetes, 
+or Public Docker Documentation for Guidance. We will eventually add the process to this document
 
 
 
+#### Docker Client Login - Mac User
+Download and import the Harbor root certificate to the client workstation.  
+See the Linux instructions.  
+
+For additional support, see the Harbor User Guide, https://github.com/goharbor/harbor/blob/master/docs/user_guide.md#pull-image-from-harbor-in-kubernetes, 
+or Public Docker Documentation for Guidance. We will eventually add the process to this document
 
 
+#### (Alternative) Insecure Registry Access 
+Create or Modify daemon.json   
+`$ vim /etc/docker/daemon.json`
+```
+{
+   "insecure-registries" : [ "harbor.corp.local" ]
+}
+```
+Then, restart the docker service
+
+### Pushing a image to Harbor  
+Locally load, build, or pull an image from an external source  
+
+Login to the Harbor Registry from the command-line  
+`$ docker login <harbor fqdn>`  
+Tag the image:  
+`$ docker tag <image name> <habor fqdn>/<repository>/<image name>:<version>`  
+Push the image:  
+`$ docker push <habor fqdn>/<repository>/<image name>:<version>`
+
+### Kubernetes App Deployments with Harbor Images
+
+#### Public Repository  
+Add Harbor image path to Kubernetes deployment specification  
+`image: <Harbor FQDN>/<Repository>/<Image Name>:<Version>`
+#### Private Repository
+Create a Kubernetes secret
+```
+$kubectl create secret docker-registry regsecret \
+–-docker-server=http://<Harbor FQDN>:4443 \
+--docker-username=<username> \
+--docker-password=<password> --docker-email=<email address>
+```
+Add Harbor image path to Kubernetes deployment specification  
+`image: <Harbor FQDN>/<Repository>/<Image Name>:<Version>`
+
+## Common Tasks and Integrations
+
+### Switch Kubernetes Contexts/Clusters and Set Namespace  
+View kubeconfig content  
+`$ kubectl config view`  
+View kubectl contexts and current context  
+`$ kubectl config get-contexts `  
+OR just current  
+`$ kubectl config current-context`  
+Switch context  
+`$ kubectl config use-context <context name>`  
+Switch Namespace  
+`$ kubectl get ns`  
+Identify Namespace and switch  
+`$ kubectl config set-context <context name> --namespace=<namespace name>`
+
+### Define a default Storage Class in Kubernetes
+
+Many app deployments, specifically Helm Charts, expect a defined default storage class. Operators can manually create the default storage class following creation of the Kubernetes cluster, or automatically by injecting the Kubernetes specification in the PKS plan’s post-installation task field. 
+
+As an operator, verify current context
+`$ kubectl config get-contexts `
+Save the storage class specification to a .yml file. For example,
+```
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: thin
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: kubernetes.io/vsphere-volume
+parameters:
+    diskformat: thin
+```
+apply it to the cluster
+`$ kubectl apply –f <filename>`
+
+To set an existing storage class as default, list the current storageclasses in the cluster:
+
+`$ kubectl patch storageclass <your-class-name> \
+-p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'`
+
+### Kubernetes Add-ons
+
+#### Configuring Tiller
+https://docs.pivotal.io/runtimes/pks/1-2/configure-tiller-helm.html
 
 
+#### Jenkins-X on PKS Kubernetes
+##### Preparations
+Requires RBAC, Default Storage Class, and Helm
+1. Verify cluster deployed with privileged containers – See PKS Plan in Ops Manager
+2. Create a default storage class the cluster
+```
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: thin
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: kubernetes.io/vsphere-volume
+parameters:
+    diskformat: thin
+```
+3. Get jx: https://jenkins-x.io/getting-started/install/
 
+
+##### Installation
+1. Run   
+`$ jx install`  
+2. Select `pks`
+3. Enter `Yes` for ingress controller
+4. Enter domain `<domain name>`
+5. Get new Jenkins virtual server IP from NSX Manager and create an A-record with wildcard in DNS: *.jx.corp.lopcal
+6. Enter GitHub user account and API token
+https://github.com/settings/tokens/new?scopes=repo,read:user,user:email,write:repo_hook
+7. During deployment, you need to correct the MongoDB image IPV6 variable and image  
+`$ kubectl edit deployment jenkins-x-mongodb -n jx
+Add name and value to list of ENV variables and update image`  
+```
+name: MONGODB_ENABLE_IPV6
+value: “no”
+image: docker.io/bitnami/mongodb:4.0.3-debian-9-r26
+```
+8. Enter `<esc>:wq` to save and exit the VI editor
+9. For up to 10 minutes, monitor mongodb and monocular-api pods, ensuring that that both stabilize and enter RUNNING status  
+`$ watch kubectl get pods –n jx`  
+Follow output guidance from jx install console
+
+### Visibility into PKS-deployed Kubernetes Clusters
+#### OSS Prometheus and Grafana
+
+https://code.vmware.com/samples/4224/visibility-into-pks-deployed-kubernetes-clusters-with-oss-prometheus-and-grafana-
+
+View on GitHub: https://github.com/csaroka/kubernetes-monitoring
+
+### NFS Server Provisioner with RWX PVC Support
+#### Persistent Storage for Scaling Web Front-Ends
+https://code.vmware.com/samples/4552/nfs-server-provisioner-with-rwx-pvc-support-for-scaling-web-front-ends
 
 
 
