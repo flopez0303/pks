@@ -1,0 +1,141 @@
+#Search and replace all three instances of <PKS_CLUSTER_NAME> to PKS cluster alias. Retrieve with: $pks clusters
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wavefront-proxy
+  namespace: kube-system
+  labels:
+    app: wavefront-proxy
+    name: wavefront-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wavefront-proxy
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: wavefront-proxy
+        version: v1
+    spec:
+      containers:
+      - name: wavefront-proxy
+        image: wavefronthq/proxy:4.27
+        imagePullPolicy: Always
+        env:
+        - name: WAVEFRONT_URL
+          value: https://longboard.wavefront.com/api
+        - name: WAVEFRONT_TOKEN
+          valueFrom: 
+            secretKeyRef:
+              key: wavefront-token
+              name: wavefront-secret
+        - name: WAVEFRONT_HOSTNAME
+          value: <PKS_CLUSTER_NAME>-pks-wavefront-proxy
+        - name: WAVEFRONT_PROXY_ARGS
+          value: --prefix pks --preprocessorConfigFile /etc/wavefront/wavefront-proxy/wavefront-preprocessor-config/rules.yaml 
+          # If there is a corporate proxy append following to the line above --proxyHost <FQDN> --proxyPort <port>
+        - name: JAVA_HEAP_USAGE
+          value: 1000M
+        ports:
+        - containerPort: 2878
+          protocol: TCP
+        volumeMounts:
+        - name: wavefront-preprocessor-config
+          mountPath: /etc/wavefront/wavefront-proxy/wavefront-preprocessor-config 
+        resources:
+          limits:
+            memory: 1500M
+      - name: heapster
+        image: k8s.gcr.io/heapster-amd64:v1.5.2
+        imagePullPolicy: Never
+        command:
+        - /heapster
+        - --source=kubernetes:https://master.cfcr.internal:8443?useServiceAccount=true&kubeletHttps=true&kubeletPort=10250&insecure=true
+        - --sink=wavefront:localhost:2878?clusterName=<PKS_CLUSTER_NAME>&includeLabels=true
+        volumeMounts:
+        - name: ssl-certs
+          mountPath: /etc/ssl/certs
+          readOnly: true
+      - name: kube-state-metrics
+        image: quay.io/coreos/kube-state-metrics:v1.3.0
+        imagePullPolicy: Always
+        command:
+        - /kube-state-metrics
+        - --port=8080
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+      - name: telegraf
+        image: wavefronthq/telegraf:1.7.1
+        imagePullPolicy: Always 
+        command:
+        - telegraf
+        - --config
+        - /etc/telegraf/wf/telegraf.conf
+        volumeMounts:
+        - name: telegraf-ksm-config
+          mountPath: /etc/telegraf/wf
+      restartPolicy: Always
+      serviceAccount: wavefront-proxy
+      serviceAccountName: wavefront-proxy
+      volumes:
+      - name: ssl-certs
+        hostPath:
+          path: /etc/ssl/certs
+      - name: telegraf-ksm-config
+        projected:
+          sources:
+          - configMap:
+              name: telegraf-ksm-config
+      - name: wavefront-preprocessor-config
+        projected:
+          sources:
+          - configMap:
+              name: wavefront-preprocessor-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wavefront-preprocessor-config
+  namespace: kube-system
+data:
+  rules.yaml: |
+    '2878':
+      - rule    : drop-generated-label-tags
+        action  : dropTag
+        tag     : label\.(pod-template-hash|controller-revision-hash|.*kubernetes\.io.*)
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: telegraf-ksm-config
+  namespace: kube-system
+data:
+  telegraf.conf: |
+    [global_tags]
+      cluster="<PKS_CLUSTER_NAME>"
+
+    [agent]
+      interval = "60s"
+      round_interval = true
+      metric_batch_size = 1000
+      metric_buffer_limit = 10000
+      collection_jitter = "0s"
+      flush_interval = "60s"
+      flush_jitter = "0s"
+      precision = ""
+      debug = false
+      quiet = false
+      logfile = ""
+      hostname = ""
+      omit_hostname = false
+
+    [[inputs.prometheus]]
+      urls = ["http://localhost:8080/metrics"]
+      namedrop = ["kube_namespace_annotations*"]
+
+    [[outputs.wavefront]]
+      host = "localhost"
+      port = 2878
