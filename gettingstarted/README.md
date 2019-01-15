@@ -121,11 +121,11 @@ Additionally, you can view the other clusterroles with the command
 #### Step 5: Retrieve User Token
 Different from Operators, Developers will retrieve their tokens and populate their kubeconfig by running a script from their workstation.
 Today, the scripts are written for Linux and Windows.  
-Linux - https://github.com/csaroka/pks/blob/master/tokenrefresh/user-token-refresh-lnx.sh  
-Windows - https://github.com/csaroka/pks/blob/master/tokenrefresh/user-token-refresh-win.ps1
+Linux - https://raw.githubusercontent.com/csaroka/pks/master/tokenrefresh/get-pks-k8s-config.sh  
+Windows - https://raw.githubusercontent.com/csaroka/pks/master/tokenrefresh/get-pks-k8s-config.ps1
 
 ##### Retrieve Developer Token – Linux User
-a. Open a text-editor and paste from https://raw.githubusercontent.com/csaroka/pks/master/tokenrefresh/user-token-refresh-lnx.sh   
+a. Open a text-editor and paste from https://raw.githubusercontent.com/csaroka/pks/master/tokenrefresh/get-pks-k8s-config.sh   
 b. Save as `<filename>.sh`  
 c. Make the file executable with  
 `$ chmod a+x <filename>.sh`  
@@ -143,7 +143,7 @@ c. Add to System variables, path
 `C:\Program Files\OpenSSL-Win64\bin`  
 d. Download and install kubectl from Pivotal Network
 https://network.pivotal.io/products/pivotal-container-service#/releases/191865/file_groups/1134  
-e. Add the location of `kubectl` to path or from within the same directory, open a text-editor and paste from https://raw.githubusercontent.com/csaroka/pks/master/tokenrefresh/user-token-refresh-win.ps1  
+e. Add the location of `kubectl` to path or from within the same directory, open a text-editor and paste from https://raw.githubusercontent.com/csaroka/pks/master/tokenrefresh/get-pks-k8s-config.ps1 
 f. Save as `<filename>.ps1`  
 g. Open PowerShell 6 and navigate to the directory containing the .ps1 script  
 h. Execute the script with `.\<filename>.ps1`  
