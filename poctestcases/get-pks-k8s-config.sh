@@ -1,5 +1,5 @@
 #!/bin/bash -e
-# v 0.0.4
+# v 0.0.5.1
 
 # get-pks-k8s-config.sh
 # gmerlin@vmware.com
@@ -73,7 +73,9 @@ PKS_PASSWORD=$(urlencode $PKS_PASSWORD_RAW)
 
 # Collect Tokens from UAA
 CURL_CMD="curl 'https://${PKS_API}:8443/oauth/token' -sk -X POST -H 'Accept: application/json' -d \"client_id=pks_cluster_client&client_secret=\"\"&grant_type=password&username=${PKS_USER}&password=\"${PKS_PASSWORD}\"&response_type=id_token\""
-read id_token refresh_token <<< $(eval $CURL_CMD | awk -F\" '{print $4, $12}')
+
+TOKENS=$(eval $CURL_CMD | jq -r '{id_token, refresh_token} | to_entries | map("\(.key)=\(.value | @sh)") | .[]')
+eval $TOKENS
 
 if [ $id_token = "unauthorized" ]; then
     echo
