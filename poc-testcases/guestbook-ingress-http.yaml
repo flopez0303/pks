@@ -8,7 +8,7 @@ spec:
   - host: guestbook.lab.local
     http:
       paths:
-      - path: /
+      - path:
         backend:
           serviceName: frontend
           servicePort: 80
