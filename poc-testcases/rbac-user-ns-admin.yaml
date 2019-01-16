@@ -3,13 +3,13 @@ kind: RoleBinding
 metadata:
   labels:
   # Replace name below with appropriate label for the policy
-  name: developers-ns-viewonly
+  name: developer01-ns-viewonly
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: edit
+  name: admin
 subjects:
 - apiGroup: rbac.authorization.k8s.io
-  kind: Group
-  # Replace name below with appropriate LDAP group
-  name: Developers
+  kind: User
+  # Replace name below with appropriate LDAP user
+  name: developer01
