@@ -2,7 +2,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: guestbook-ingress
+  name: guestbook-ingress-tls
 spec:
   tls:
   - hosts:
