@@ -1,8 +1,9 @@
 #!/bin/bash -e
-# v 0.0.5.1
+# v 0.0.5.1-cs
 
 # get-pks-k8s-config.sh
 # gmerlin@vmware.com
+# csaroka@vmware.com modified
 
 function usage()
 {
@@ -86,7 +87,8 @@ fi
 #exit 0
 
 # Construct Kubeconfig
-echo | openssl s_client -showcerts -connect ${PKS_CLUSTER}:8443 2>/dev/null | awk '/s:\/CN=ca/,/-----END CERTIFICATE-----/' | openssl x509 -outform PEM > ./${PKS_CLUSTER}-ca.crt
+echo | openssl s_client -connect ${PKS_CLUSTER}:8443  2>&1 | sed -n '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | openssl x509 -outform PEM > ./${PKS_CLUSTER}-ca.crt
+# echo | openssl s_client -showcerts -connect ${PKS_CLUSTER}:8443 2>/dev/null | awk '/s:\/CN=ca/,/-----END CERTIFICATE-----/' | openssl x509 -outform PEM > ./${PKS_CLUSTER}-ca.crt
 kubectl config set-cluster ${PKS_CLUSTER} --server=https://${PKS_CLUSTER}:8443 --certificate-authority=./${PKS_CLUSTER}-ca.crt --embed-certs=true
 kubectl config set-context ${PKS_CLUSTER} --cluster=${PKS_CLUSTER} --user=${PKS_USER} --namespace=${PKS_NAMESPACE}
 kubectl config use-context ${PKS_CLUSTER}
