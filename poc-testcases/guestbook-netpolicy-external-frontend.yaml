@@ -7,4 +7,7 @@ spec:
     matchLabels:
       tier: frontend
   ingress:
-  - from: []
+  - from:
+    - podSelector:
+        matchLabels:
+          user: "client"
