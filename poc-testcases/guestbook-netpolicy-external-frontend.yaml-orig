@@ -7,7 +7,4 @@ spec:
     matchLabels:
       tier: frontend
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          run: busybox
+  - from: []
