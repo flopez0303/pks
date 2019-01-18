@@ -5,9 +5,9 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      tier: backend
+      app: redis
   ingress:
   - from:
       - podSelector:
           matchLabels:
-            tier: frontend
+            app: guestbook
