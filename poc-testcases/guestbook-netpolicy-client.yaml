@@ -8,9 +8,9 @@ spec:
     tier: frontend                                                                                                                                                                                          
  ingress:                                                                                                                                                                                                   
   - from:                                                                                                                                                                                                   
-    ports:                                                                                                                                                                                                    
-    - protocol: TCP                                                                                                                                                                                        
-      port: 80                                                                                                                                                                                             
+    ports:                                                                                                                                                                                                  
+     - protocol: TCP                                                                                                                                                                                        
+       port: 80                                                                                                                                                                                             
 ---                                                                                                                                                                                                         
 apiVersion: extensions/v1beta1                                                                                                                                                                              
 kind: NetworkPolicy                                                                                                                                                                                         
