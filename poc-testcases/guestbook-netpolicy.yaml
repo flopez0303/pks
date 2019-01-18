@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1                                                                                                                                                                              
+kind: NetworkPolicy                                                                                                                                                                                         
+metadata:                                                                                                                                                                                                   
+ name: gb-external-frontend                                                                                                                                                                             
+spec:                                                                                                                                                                                                       
+ podSelector:                                                                                                                                                                                               
+  matchLabels:                                                                                                                                                                                              
+    tier: frontend                                                                                                                                                                                          
+ ingress:                                                                                                                                                                                                   
+  - from:                                                                                                                                                                                                   
+    ports:                                                                                                                                                                                                  
+     - protocol: TCP                                                                                                                                                                                        
+       port: 80                                                                                                                                                                                             
+---                                                                                                                                                                                                         
+apiVersion: extensions/v1beta1                                                                                                                                                                              
+kind: NetworkPolicy                                                                                                                                                                                         
+metadata:                                                                                                                                                                                                   
+ name: gb-frontend-backend                                                                                                                                                                              
+spec:                                                                                                                                                                                                       
+ podSelector:                                                                                                                                                                                               
+  matchLabels:                                                                                                                                                                                              
+    tier: backend                                                                                                                                                                                           
+ ingress:                                                                                                                                                                                                   
+  - from:                                                                                                                                                                                                   
+     - podSelector:                                                                                                                                                                                         
+        matchLabels:                                                                                                                                                                                        
+          tier: frontend                                                                                                                                                                                    
+          app: guestbook                                                                                                                                                                                    
+    ports:                                                                                                                                                                                                  
+     - protocol: TCP                                                                                                                                                                                        
+       port: 6379                                                                                                                                                                                           
