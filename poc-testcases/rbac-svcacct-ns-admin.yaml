@@ -3,13 +3,12 @@ kind: RoleBinding
 metadata:
   labels:
   # Replace name below with appropriate label for the policy
-  name: developer01-ns-admin
+  name: devsa01-ns-admin
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: admin
 subjects:
-- apiGroup: rbac.authorization.k8s.io
-  kind: User
-  # Replace name below with appropriate LDAP user
-  name: developer01
+- kind: ServiceAccount
+  name: devsa01
+  namespace: dev-sandbox01
