@@ -4,7 +4,8 @@
 #to authenticate with the Kubernete API. Before the service account can access API resources, an RBAC policy must
 #be applied to the namespace. The also script produces an example, pre-populated RBAC policy and outputs it to the 
 #console. 
- 
+#Requires installation of jq. See https://stedolan.github.io/jq/download/
+
 #csaroka@vmware.com
 
 set -e
