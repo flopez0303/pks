@@ -11,4 +11,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: devsa01
-  namespace: dev-sandbox01
+  namespace: default
