@@ -4,7 +4,7 @@ metadata:
   name: alpine-signed-pod
 spec:
   containers:
-  - image: harbor.lab.local/trustme/alpine:v1
+  - image: harbor.lab.local/trustme/alpine:v2
     command:
       - /bin/sh
       - "-c"
