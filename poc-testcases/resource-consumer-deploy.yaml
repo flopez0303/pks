@@ -23,8 +23,8 @@ spec:
           protocol: TCP
         resources:
           requests:
-            cpu: 500m
-            memory: 256Mi
+            cpu: 200m
+          # memory: 256Mi
 ---
 apiVersion: v1
 items:
