@@ -12,5 +12,5 @@ spec:
     imagePullPolicy: Always
     name: alpine-auth
   restartPolicy: Always
-  immagePullSecrets:
+  imagePullSecrets:
   - name: priv-a-creds
