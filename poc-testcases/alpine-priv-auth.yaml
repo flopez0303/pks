@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: alpine-noauth
+  name: alpine-auth
 spec:
   containers:
   - image: harbor.lab.local/project-priv-a/alpine:v1
@@ -10,7 +10,7 @@ spec:
       - "-c"
       - "sleep 60m"
     imagePullPolicy: Always
-    name: alpine-noauth
+    name: alpine-auth
   restartPolicy: Always
   immagePullSecrets:
   - name: priv-a-creds
