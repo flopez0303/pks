@@ -193,17 +193,34 @@ Destroy the Kubernetes cluster
 `$ pks delete-cluster <cluster name>`
 
 ## Working with the Harbor Registry
-For secure registry access, users will require the registry root certificate.  To obtain the root certificate, a registry admin needs to log into the Harbor management portal and navigate to Administration > Configuration > System Settings. Next, select the hyeperlink to Download the Registry Root Certificate. Then, the admin user can save and share the root certificate with the registry users.
+Before exchanging container images with Harbor, users need to obtain the root certificate from either an Administrator or by logging into the Harbor web UI and downloading it from the repository page. Afterward, he/she configures the Docker client and notary to reference the certificate. Based on the operating system, reference the guidance below:
 
 #### Docker Client Login - Linux User
-`$ sudo mkdir -p /etc/docker/certs.d/<Harbor FQDN>`  
-`$ sudo cp ca.crt /etc/docker/certs.d/<Harbor FQDN>`  
-`$ mkdir -p ~/.docker/tls/<Harbor FQDN>\:4443/`  
-`$ cp ca.crt ~/.docker/tls/<Harbor FQDN>\:4443/`  
-`$ sudo cp ca.crt /usr/local/share/ca-certificates/`  
-`$ sudo update-ca-certificates`  
-`$ service docker restart`  
-`$ docker login <Harbor FQDN>`
+Open a terminal window and execute the following commands:
+```
+$ sudo mkdir -p /etc/docker/certs.d/HARBOR_FQDN
+$ sudo cp ca.crt /etc/docker/certs.d/HARBOR_FQDN
+$ mkdir -p ~/.docker/tls/HARBOR_FQDN\:4443/
+$ cp ca.crt ~/.docker/tls/HARBOR_FQDN\:4443/
+$ sudo mkdir -p ~/.docker/trust/
+$ sudo cp ca.crt ~/.docker/trust/
+$ sudo cp ca.crt /usr/local/share/ca-certificates/
+$ sudo update-ca-certificates
+$ sudo service docker restart
+```
+
+#### Docker Client Login - MacOS User
+Open a terminal window and execute the following commands:
+```
+$ sudo mkdir -p /etc/docker/certs.d/HARBOR_FQDN
+$ sudo cp ca.crt /etc/docker/certs.d/HARBOR_FQDN
+$ mkdir -p ~/.docker/tls/HARBOR_FQDN\:4443/
+$ cp ca.crt ~/.docker/tls/HARBOR_FQDN\:4443/
+$ sudo mkdir -p ~/.docker/trust/
+$ sudo cp ca.crt ~/.docker/trust/
+$ sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ca.crt
+```
+Then, restart the Docker daemon using the desktop service icon.
 
 #### Docker Client Login - Windows User  
 Download the Harbor root certificate to the client workstation.  
@@ -214,14 +231,6 @@ Open the CMD window, and run
 For additional support, see the Harbor User Guide, https://github.com/goharbor/harbor/blob/master/docs/user_guide.md#pull-image-from-harbor-in-kubernetes, 
 or Public Docker Documentation for Guidance. We will eventually add the process to this document
 
-
-
-#### Docker Client Login - Mac User
-Download and import the Harbor root certificate to the client workstation.  
-See the Linux instructions.  
-
-For additional support, see the Harbor User Guide, https://github.com/goharbor/harbor/blob/master/docs/user_guide.md#pull-image-from-harbor-in-kubernetes, 
-or Public Docker Documentation for Guidance. We will eventually add the process to this document
 
 
 #### (Alternative) Insecure Registry Access 
