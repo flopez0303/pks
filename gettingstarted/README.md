@@ -253,6 +253,14 @@ Tag the image:
 Push the image:  
 `$ docker push <habor fqdn>/<repository>/<image name>:<version>`
 
+To push an image with a signature into Harbor, set enviorment variables:
+```
+export DOCKER_CONTENT_TRUST_SERVER=https://HARBOR_FQDN:4443
+export DOCKER_CONTENT_TRUST=1
+```
+
+
+
 ### Kubernetes App Deployments with Harbor Images
 
 #### Public Repository  
