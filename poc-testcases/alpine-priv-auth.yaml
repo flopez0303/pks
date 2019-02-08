@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: alpine-auth
+spec:
+  containers:
+  - image: harbor.lab.local/project-priv-a/alpine:v1
+    command:
+      - /bin/sh
+      - "-c"
+      - "sleep 60m"
+    imagePullPolicy: Always
+    name: alpine-auth
+  restartPolicy: Always
+  imagePullSecrets:
+  - name: priv-a-creds
