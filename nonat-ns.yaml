@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-   name: no-nat-namespace
-   annotations:
-      ncp/no_snat: "true"
