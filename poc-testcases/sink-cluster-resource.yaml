@@ -1,0 +1,9 @@
+apiVersion: apps.pivotal.io/v1beta1
+kind: ClusterSink
+metadata:
+  name: YOUR-SINK
+spec:
+  type: syslog
+  host: YOUR-LOG-DESTINATION
+  port: YOUR-LOG-DESTINATION-PORT
+  enable_tls: true
