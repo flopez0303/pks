@@ -1,10 +1,10 @@
 apiVersion: apps.pivotal.io/v1beta1
 kind: Sink
 metadata:
-  name: YOUR-SINK
-  namespace: YOUR-NAMESPACE
+  name: k8s01-ns-sink
+  namespace: nslogs
 spec:
   type: syslog
-  host: YOUR-LOG-DESTINATION
-  port: YOUR-LOG-DESTINATION-PORT
-  enable_tls: true
+  host: 10.0.16.15
+  port: 514
+  enable_tls: false
