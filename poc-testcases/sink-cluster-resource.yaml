@@ -1,9 +1,0 @@
-apiVersion: apps.pivotal.io/v1beta1
-kind: ClusterSink
-metadata:
-  name: k8s01-cluster-sink
-spec:
-  type: syslog
-  host: 10.0.16.15
-  port: 514
-  enable_tls: false
