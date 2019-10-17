@@ -1,21 +1,21 @@
 Perform the following steps on the Ops Manager VM
 
 #### 1) Login to the Ops Manager VM 
-`$ ssh ubuntu@opsman.lab.local`
+`ssh ubuntu@opsman.lab.local`
 
 #### 2) Set the API target
-`$ uaac target https://localhost/uaa --skip-ssl-validation`\
+`uaac target https://localhost/uaa --skip-ssl-validation`\
 ```
 Unknown key: Max-Age = 86400
 Target: https://localhost/uaa
 ```
 
 #### 3) Collect the Admin user token
-`$ uaac token owner get`\
-    Client ID: **opsman**\
-    Client secret: **### Leave blank ###**\
-    User name: **admin**\
-    Password: **###PASSWORD USED TO LOGIN TO WEB UI###**
+`uaac token owner get`\
+    <p>Client ID: `opsman`\
+    Client secret: `###LEAVE BLANK###`\
+    User name: `admin`\
+    Password: `###PASSWORD USED TO LOGIN TO WEB UI###`</p>
 ```
 Successfully fetched token via owner password grant.
 Target: https://localhost/uaa
@@ -23,15 +23,15 @@ Context: admin, from client opsman
 ```
 
 #### 4) Add a new client account
-`$ uaac client add -i`\
-    Client ID:  **apiuser**\
-    New client secret:  **#### For example, VMware1!VMware1! ####**\
-    Verify new client secret:  ****************\
-    scope (list):  **opsman.admin**\
-    authorized grant types (list):  **client_credentials**\
-    authorities (list):  **opsman.admin**\
-    access token validity (seconds):  **43200**\
-    refresh token validity (seconds):  **43200**\
+`uaac client add -i`\
+    <p>Client ID:  `apiuser`\
+    New client secret:  `### For example, VMware1!VMware1! ###`\
+    Verify new client secret:  `****************`\
+    scope (list):  `opsman.admin`\
+    authorized grant types (list):  `client_credentials`\
+    authorities (list):  `opsman.admin`\
+    access token validity (seconds):  `43200`\
+    refresh token validity (seconds):  `43200`\
     redirect uri (list):\
     autoapprove (list):\
     signup redirect url (url):\
@@ -48,8 +48,8 @@ Context: admin, from client opsman
     required_user_groups:\
     lastmodified: 1567120054790\
     id: apiuser\
-    created_by: cbef5f0f-2f12-4c8c-98ab-0f2b0f74ca3f
-    
+    created_by: cbef5f0f-2f12-4c8c-98ab-0f2b0f74ca3f</p>
+
 #### 5) Install the OM CLI - https://github.com/pivotal-cf/om#installation
 `sudo wget -q -O - https://raw.githubusercontent.com/starkandwayne/homebrew-cf/master/public.key | sudo  apt-key add -`\
 `sudo echo "deb http://apt.starkandwayne.com stable main" | sudo  tee /etc/apt/sources.list.d/starkandwayne.list`\
@@ -64,11 +64,11 @@ Context: admin, from client opsman
 `export OM_SKIP_SSL_VALIDATION=true`
 
 #### 7) Get current list of VM flavors
-`$ om curl -x GET --path /api/v0/vm_types > opsman_vm_types.json`
+`om curl -x GET --path /api/v0/vm_types > opsman_vm_types.json`
     
 #### 8) Edit the file with mods/deletes/additions and save as opsman_vm_types_payload.json or something
-`$ cp opsman_vm_types.json opsman_vm_types_payload.json`\
-`$ vim opsman_vm_types_payload.json`
+`cp opsman_vm_types.json opsman_vm_types_payload.json`\
+`vim opsman_vm_types_payload.json`
 
 For example append "3xlarge.cpu" to the end of flavors
 ```
@@ -92,7 +92,7 @@ For example append "3xlarge.cpu" to the end of flavors
 ```
 #### 9) Put the updated list of VM flavors
 
-`$ om curl -x PUT --path /api/v0/vm_types --data "$(jq -c '.'  opsman_vm_types_payload.json)"`
+`om curl -x PUT --path /api/v0/vm_types --data "$(jq -c '.'  opsman_vm_types_payload.json)"`
 
     Status: 200 OK
     Cache-Control: no-cache, no-store
@@ -110,7 +110,7 @@ For example append "3xlarge.cpu" to the end of flavors
     X-Xss-Protection: 1; mode=block
 
 #### 10) Verify change took effect with
-`$ om curl -x GET --path /api/v0/vm_types`
+`om curl -x GET --path /api/v0/vm_types`
 
 
 Ops Manager API Reference: https://docs.pivotal.io/pivotalcf/2-3/customizing/ops-man-api.html
